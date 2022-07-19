@@ -1,10 +1,8 @@
 # nginx-proxy-to-host
 
-Reverse proxy configuration to connect to apps running or exposed to host ports.
+Reverse proxy configuration to connect to apps running or exposed on host ports.
 
 Using [nginx-proxy] Docker image.
-
-[nginx-proxy]: https://hub.docker.com/r/nginxproxy/nginx-proxy
 
 ## Usage
 
@@ -41,11 +39,14 @@ services:
       - HOST_PORT=9000
 ```
 
-3. (Optional) To be able to use `HTTPS`, copy the certs `.crt` and `.key` files to `nginx/certs/` folder. The cert and key filename must match the domain mains.
-  + `mysservice-001.local.crt`
-  + `mysservice-001.local.key`
-  + `mysservice-002.local.crt`
-  + `mysservice-002.local.key`
+3. (Optional) To be able to use `HTTPS`, copy the certs `.crt` and `.key` files to `nginx/certs/` folder. The cert and key filename must match the domain names.
+
+```
+mysservice-001.local.crt
+mysservice-001.local.key
+mysservice-002.local.crt
+mysservice-002.local.key
+```
 
 3. (Optional) Set the domain names on your `/etc/hosts`, if you're using anything different from `*.localhost`
 
@@ -65,3 +66,13 @@ docker compose up
   + http://myservice-001.local
   + http://myservice-002.local
 
+## How it works
+
+- The `nginx-proxy` docker image listens to any new containers including the `VIRTUAL_HOST` env and forward connections on ports `80` and `443` to them, according to the domain set in the aforementioned env var.
+- Each created service runs its own `nginx` [reverse proxy] configured to forwared connections to the `host` ip address, on the defined `port`.
+
+![diagram-001]
+
+[nginx-proxy]: https://hub.docker.com/r/nginxproxy/nginx-proxy
+[reverse proxy]: ./nginx/nginx.conf.template
+[diagram-001]: ./media/Diagram1.png
