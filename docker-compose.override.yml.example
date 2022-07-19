@@ -1,0 +1,27 @@
+# vi: ft=yaml
+version: '3.9'
+
+services:
+  # nginx reverse proxy to connect to forward
+  # requests to apps on the host
+  proxy-to-host: &proxy-to-host
+    image: nginx:alpine
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./nginx/nginx.conf.template:/tmp/nginx.conf.template:ro
+    expose:
+      - 8080
+    command: /bin/sh -c "DOLLAR='$$' envsubst < /tmp/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    profiles:
+      - donotstart
+
+  # duplicate and rename as necessary for each service running on the host
+  myservice:
+    <<: *proxy-to-host
+    profiles: []
+    environment:
+      # set the VIRTUAL_HOST and HOST_PORT
+      - VIRTUAL_HOST=myservice.local
+      - HOST_PORT=8000
+
