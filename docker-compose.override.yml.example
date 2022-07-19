@@ -10,6 +10,6 @@ services:
       service: proxy-to-host
     profiles: []
     environment:
-      - VIRTUAL_HOST=myservice.local
+      - VIRTUAL_HOST=myservice.localhost
       - HOST_PORT=8000
 
