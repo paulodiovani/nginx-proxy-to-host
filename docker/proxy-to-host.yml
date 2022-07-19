@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  # nginx reverse proxy to connect,
+  # forward requests to apps on the host
+  # base service, supposed to be extended
+  proxy-to-host:
+    image: nginx:alpine
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ../nginx/nginx.conf.template:/tmp/nginx.conf.template:ro
+    expose:
+      - 8080
+    command: /bin/sh -c "DOLLAR='$$' envsubst < /tmp/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
