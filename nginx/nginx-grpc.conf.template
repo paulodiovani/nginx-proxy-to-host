@@ -2,6 +2,7 @@
 # proxy http requests to docker container to host at provided port
 server {
   server_name $VIRTUAL_HOST;
+  http2 on;
 
   location / {
     grpc_pass grpc://host.docker.internal:$HOST_PORT;
