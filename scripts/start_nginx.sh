@@ -10,6 +10,4 @@ else
   envsubst < /tmp/nginx-http.conf.template > /etc/nginx/conf.d/default.conf
 fi
 
-cat /etc/nginx/conf.d/default.conf
-
 nginx -g 'daemon off;'
