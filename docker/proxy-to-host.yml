@@ -9,7 +9,9 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     volumes:
-      - ../nginx/nginx.conf.template:/tmp/nginx.conf.template:ro
+      - ../nginx/nginx-http.conf.template:/tmp/nginx-http.conf.template:ro
+      - ../nginx/nginx-grpc.conf.template:/tmp/nginx-grpc.conf.template:ro
+      - ../scripts/start_nginx.sh:/bin/start_nginx.sh:ro
     expose:
       - 8080
-    command: /bin/sh -c "DOLLAR='$$' envsubst < /tmp/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    command: /bin/start_nginx.sh
